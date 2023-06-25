@@ -8,6 +8,7 @@
     <div class="relative w-full max-w-2xl max-h-full">
       <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
         <template v-if="props.country">
+          <!-- Modal Header -->
           <div
             class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600"
           >
@@ -42,21 +43,30 @@
               <span class="sr-only">Close modal</span>
             </button>
           </div>
+          <!-- Modal Body -->
           <div class="p-6 space-y-6">
-            <div>
-              <label class="font-bold text-black"
-                >2 character Country Code:</label
-              >
-              {{ country.cca2 }}
-            </div>
-            <div>
-              <label class="font-bold text-black"
-                >3 character Country Code:
-              </label>
-              {{ country.cca3 }}
-            </div>
-            <div class="flex">
-              <label class="font-bold text-black">Native Country Name: </label>
+            <CountryDetailProperties
+              name="2 character Country Code"
+              :value="country.cca2"
+            />
+            <CountryDetailProperties
+              name="3 character Country Code"
+              :value="country.cca3"
+            />
+
+            <CountryDetailProperties
+              name="Canadian International Organ Competition"
+              :value="country.cioc"
+            />
+
+            <CountryDetailProperties
+              name="Cellular Communication Network Factor 3"
+              :value="country.ccn3"
+            />
+
+            <CountryDetailProperties name="Status" :value="country.status" />
+
+            <CountryDetailProperties name="Native Country Name">
               <div>
                 <p
                   v-for="(nativeName, key, index) in country.name.nativeName"
@@ -65,17 +75,14 @@
                   &nbsp;&nbsp; <b>{{ key }}</b> : {{ nativeName.official }}
                 </p>
               </div>
-            </div>
-            <div>
-              <label class="font-bold text-black"
-                >Alternative Country Name:
-              </label>
-              {{ country.altSpellings.join(', ') }}
-            </div>
-            <div>
-              <label class="font-bold text-black"
-                >Country Calling Codes:
-              </label>
+            </CountryDetailProperties>
+
+            <CountryDetailProperties
+              name="Alternative Country Name"
+              :value="country.altSpellings.join(', ')"
+            />
+
+            <CountryDetailProperties name="Country Calling Codes">
               <span
                 v-for="(suffix, index) in country.idd.suffixes"
                 :key="suffix"
@@ -85,7 +92,118 @@
                   >,&nbsp;</span
                 >
               </span>
-            </div>
+            </CountryDetailProperties>
+
+            <CountryDetailProperties
+              name="Independent"
+              :value="country.independent"
+            />
+
+            <CountryDetailProperties name="Currencies">
+              <span v-for="(cur, index) in country.currencies" :key="index">
+                {{ cur.name }}({{ cur.symbol }})
+              </span>
+            </CountryDetailProperties>
+
+            <CountryDetailProperties
+              name="Capital"
+              :value="country.capital[0]"
+            />
+
+            <CountryDetailProperties name="Region" :value="country.region" />
+
+            <CountryDetailProperties
+              name="Subregion"
+              :value="country.subregion"
+            />
+
+            <CountryDetailProperties name="Languages">
+              <span
+                v-for="(language, key, index) in country.languages"
+                :key="index"
+              >
+                {{ language }}({{ key }})&nbsp;
+              </span>
+            </CountryDetailProperties>
+
+            <CountryDetailProperties name="Translations">
+              <span
+                v-for="(translation, index) in Object.values(
+                  country.translations
+                )"
+                :key="index"
+              >
+                {{ translation.official }}
+                <span v-if="index != Object.values(country.translations).length"
+                  >,&nbsp;</span
+                >
+              </span>
+            </CountryDetailProperties>
+
+            <CountryDetailProperties
+              name="Landlocked"
+              :value="country.landlocked"
+            />
+
+            <CountryDetailProperties
+              name="Population"
+              :value="country.population"
+            />
+
+            <CountryDetailProperties
+              name="Timezones"
+              :value="country.timezones[0]"
+            />
+
+            <CountryDetailProperties
+              name="Latlng"
+              :value="country.latlng.join(', ')"
+            />
+
+            <CountryDetailProperties name="Borders">
+              <span v-for="(border, index) in country.borders" :key="index">
+                {{ border }}
+                <span v-if="index != country.borders.length">,&nbsp;</span>
+              </span>
+            </CountryDetailProperties>
+
+            <CountryDetailProperties name="Area" :value="country.area" />
+
+            <CountryDetailProperties name="Fifa" :value="country.fifa" />
+
+            <CountryDetailProperties
+              name="Continents"
+              :value="country.continents[0]"
+            />
+
+            <CountryDetailProperties
+              name="StartOfWeek"
+              :value="country.startOfWeek"
+            />
+
+            <CountryDetailProperties name="Maps">
+              <p v-for="(value, key) in country.maps" :key="key">
+                <span class="font-medium">
+                  {{ key }}
+                </span>
+                :
+                <a :href="country.maps[key]">
+                  {{ country.maps[key] }}
+                </a>
+              </p>
+            </CountryDetailProperties>
+
+            <CountryDetailProperties name="Demonyms">
+              <span
+                v-for="(demonym, index) in Object.values(country.demonyms)"
+                :key="index"
+              >
+                {{ demonym.f }}
+                <span v-if="index != Object.values(country.demonyms).length - 1"
+                  >,&nbsp;</span
+                >
+              </span>
+            </CountryDetailProperties>
           </div>
         </template>
       </div>
@@ -94,6 +212,8 @@
 </template>
 
 <script setup>
+import CountryDetailProperties from './CountryDetailProperties.vue'
+
 const props = defineProps({
   country: {
     type: Object,
