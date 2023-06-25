@@ -211,15 +211,15 @@ const selectedCountry = ref(null)
 
 function onOpenCountryDetails(country) {
   selectedCountry.value = country
-  onToggleModel()
+  onToggleModal()
 }
 
 function onCloseCountryDetails() {
   selectedCountry.value = null
-  onToggleModel()
+  onToggleModal()
 }
 
-function onToggleModel() {
+function onToggleModal() {
   modal.toggle()
 }
 </script>
